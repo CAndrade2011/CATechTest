@@ -21,9 +21,9 @@ public class TokenHelper: ITokenHelper
     public async Task<string?> Authenticate(string email, string password)
     {
         var query = new Domain.Query.GetUniqueAccountQuery { Email = email, Password = password };
-        var uaDb = await _uniqueAccountService.GetUniqueAccountQueryHandler(query);
+        var uaDb = await _uniqueAccountService.GetUniqueAccountQueryHandlerAsync(query);
 
-        if (uaDb == null || uaDb.Email != email || uaDb.Password != password) return null;
+        if (uaDb == null || uaDb.Email != email) return null;
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:Key"]!);

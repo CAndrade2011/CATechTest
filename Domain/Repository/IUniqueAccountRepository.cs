@@ -6,7 +6,7 @@ public interface IUniqueAccountRepository
 {
     Task<bool> CreateUniqueAccountAsync(UniqueAccountAggregate uniqueAccount);
     Task<List<UniqueAccountAggregate>> GetAllUniqueAccountsAsync(string? email, string? password);
-    Task<UniqueAccountAggregate> GetUniqueAccountByIdAsync(Guid id);
+    Task<UniqueAccountAggregate> GetUniqueAccountByIdAsync(string id);
     Task<bool> UpdateUniqueAccountAsync(UniqueAccountAggregate uniqueAccount);
-    Task<bool> DeleteUniqueAccountAsync(Guid id);
+    Task<bool> DeleteUniqueAccountAsync(string id);
 }

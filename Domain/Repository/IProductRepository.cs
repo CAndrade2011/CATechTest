@@ -6,8 +6,8 @@ public interface IProductRepository
 {
     Task<bool> CreateProductAsync(ProductAggregate product);
     Task<List<ProductAggregate>> GetAllProductsAsync();
-    Task<ProductAggregate> GetProductByIdAsync(Guid id);
+    Task<ProductAggregate> GetProductByIdAsync(string id);
     Task<bool> UpdateProductAsync(ProductAggregate product);
-    Task<bool> DeleteProductAsync(Guid id);
+    Task<bool> DeleteProductAsync(string id);
 
 }

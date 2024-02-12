@@ -24,15 +24,14 @@ public class BaseContext : IDisposable
         return _database.GetCollection<T>(collectionName);
     }
 
-    protected static ObjectId ToDbId(Guid value)
+    protected static ObjectId ToDbId(string value)
     {
-        return new ObjectId(value.ToString("N"));
+        return new ObjectId(value);
     }
 
-    protected static Guid ToSystemId(ObjectId value)
+    protected static string ToSystemId(ObjectId value)
     {
-        var bytes = value.ToByteArray();
-        return new Guid(bytes);
+        return value.ToString();
     }
 
     public void Dispose()
