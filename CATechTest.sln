@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infra.DataFromMongo", "Infra.DataFromMongo\Infra.DataFromMongo.csproj", "{FED50D95-660C-4307-8FB3-10B39F87BD9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogicLayer.Test", "BusinessLogicLayer.Test\BusinessLogicLayer.Test.csproj", "{281F36A6-B481-4169-9BBB-0991E775AB68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicLayer.Test", "BusinessLogicLayer.Test\BusinessLogicLayer.Test.csproj", "{281F36A6-B481-4169-9BBB-0991E775AB68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserStory", "UserStory", "{03DBD1DB-01B0-47D3-BD11-04198D665878}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserStory", "UserStory", "{
 		UserStory\US2.rtf = UserStory\US2.rtf
 		UserStory\US3.rtf = UserStory\US3.rtf
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI.Test", "WebAPI.Test\WebAPI.Test.csproj", "{011B01EF-8117-470D-AB97-CCD2778630A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{281F36A6-B481-4169-9BBB-0991E775AB68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{281F36A6-B481-4169-9BBB-0991E775AB68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{281F36A6-B481-4169-9BBB-0991E775AB68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{011B01EF-8117-470D-AB97-CCD2778630A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{011B01EF-8117-470D-AB97-CCD2778630A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{011B01EF-8117-470D-AB97-CCD2778630A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{011B01EF-8117-470D-AB97-CCD2778630A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

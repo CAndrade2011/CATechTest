@@ -1,4 +1,6 @@
 using Domain.Aggregate;
+using Domain.Command;
+using Domain.Query;
 using Domain.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,8 +33,9 @@ public class ProductController : ControllerBase
 
     // GET: api/products/{id}
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetProductById(string id)
+    public async Task<IActionResult> GetProductById([FromRoute] string id)
     {
+        if (string.IsNullOrWhiteSpace(id)) return BadRequest();
         var product = await _productService.GetProductByIdAsync(id);
         if (product == null)
         {
@@ -43,29 +46,45 @@ public class ProductController : ControllerBase
 
     // POST: api/products
     [HttpPost]
-    public async Task<IActionResult> CreateProduct([FromBody] ProductAggregate product)
+    public async Task<IActionResult> CreateProduct([FromBody] AddProductCommand product)
     {
-        var createdProduct = await _productService.CreateProductAsync(product);
+        if (product == null) return BadRequest();
+        var createdProduct = await _productService.CreateProductAsync(new ProductAggregate
+        {
+            BarCode = product.BarCode,
+            Name = product.Name,
+            Quantity = product.Quantity
+        });
+        // TODO: fix create action to improve RestFulAPI
         //return CreatedAtAction(nameof(GetProductById), new { success = createdProduct }, createdProduct);
         return Ok(new { success = createdProduct });
     }
 
     // PUT: api/products/{id}
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductAggregate product)
+    public async Task<IActionResult> UpdateProduct([FromRoute] string id, [FromBody] UpdProductCommand product)
     {
-        var updatedProduct = await _productService.UpdateProductAsync(product);
+        if (product == null) return BadRequest();
+        if (string.IsNullOrWhiteSpace(id)) return BadRequest();
+        var updatedProduct = await _productService.UpdateProductAsync(new ProductAggregate
+        {
+            BarCode = product.BarCode,
+            Name = product.Name,
+            Quantity = product.Quantity,
+            Id = id
+        });
         if (!updatedProduct)
         {
             return NotFound();
         }
-        return Ok(updatedProduct);
+        return Ok(new { success = updatedProduct });
     }
 
     // DELETE: api/products/{id}
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProduct(string id)
+    public async Task<IActionResult> DeleteProduct([FromRoute] string id)
     {
+        if (string.IsNullOrWhiteSpace(id)) return BadRequest();
         var isDeleted = await _productService.DeleteProductAsync(id);
         if (!isDeleted)
         {

@@ -22,6 +22,13 @@ namespace WebAPI
 
             // Add services to the container.
             builder.Services.AddControllers();
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CATechTest", Version = "v1" });
+                c.OperationFilter<AddAuthorizationHeaderParameterOperationFilter>();
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -50,13 +57,6 @@ namespace WebAPI
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true
                 };
-            });
-
-
-            builder.Services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CATechTest", Version = "v1" });
-                c.OperationFilter<AddAuthorizationHeaderParameterOperationFilter>();
             });
 
             var app = builder.Build();
