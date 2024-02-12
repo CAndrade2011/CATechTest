@@ -31,7 +31,7 @@ public class UniqueAccountServiceTest
         var query = new Domain.Query.GetUniqueAccountQuery { Email = "teste@domain", Password = "password" };
 
         // Act
-        var sut = await service.GetUniqueAccountQueryHandler(query);
+        var sut = await service.GetUniqueAccountQueryHandlerAsync(query);
 
         // Assert
         sut.Should().NotBeNull();

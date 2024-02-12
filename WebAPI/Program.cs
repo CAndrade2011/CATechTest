@@ -5,6 +5,7 @@ using Domain.Service;
 using Infra.DataFromMongo.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using WebAPI.Security;
 
@@ -49,6 +50,13 @@ namespace WebAPI
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true
                 };
+            });
+
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CATechTest", Version = "v1" });
+                c.OperationFilter<AddAuthorizationHeaderParameterOperationFilter>();
             });
 
             var app = builder.Build();

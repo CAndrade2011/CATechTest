@@ -35,13 +35,14 @@ public class UniqueAccountRepository : BaseContext, IUniqueAccountRepository, ID
         if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
         {
             filters &= Builders<UniqueAccount>.Filter.Eq(u => u.Email, email);
-            filters &= Builders<UniqueAccount>.Filter.Eq(u => u.Password, BCrypt.Net.BCrypt.HashPassword(password));
+            //filters &= Builders<UniqueAccount>.Filter.Eq(u => u.Password, BCrypt.Net.BCrypt.HashPassword(password));
+            filters &= Builders<UniqueAccount>.Filter.Eq(u => u.Password, password);
         }
 
         return ToAggregate(await _uniqueAccountsCollection.Find(filters).ToListAsync());
     }
 
-    public async Task<UniqueAccountAggregate> GetUniqueAccountByIdAsync(Guid id)
+    public async Task<UniqueAccountAggregate> GetUniqueAccountByIdAsync(string id)
     {
         var filter = Builders<UniqueAccount>.Filter.Eq(p => p.Id, BaseContext.ToDbId(id));
         return ToAggregate(await _uniqueAccountsCollection.Find(filter).FirstOrDefaultAsync());
@@ -55,7 +56,7 @@ public class UniqueAccountRepository : BaseContext, IUniqueAccountRepository, ID
         return result.ModifiedCount >= 1 ? SUCCESS_RETURN : ERROR_RETURN;
     }
 
-    public async Task<bool> DeleteUniqueAccountAsync(Guid id)
+    public async Task<bool> DeleteUniqueAccountAsync(string id)
     {
         var filter = Builders<UniqueAccount>.Filter.Eq(p => p.Id, ToDbId(id));
         var result = await _uniqueAccountsCollection.DeleteOneAsync(filter);
@@ -73,7 +74,7 @@ public class UniqueAccountRepository : BaseContext, IUniqueAccountRepository, ID
             IsAdmin = obj.IsAdmin,
             LastRefreshToken = obj.LastRefreshToken,
             Name = obj.Name,
-            Password = BCrypt.Net.BCrypt.HashPassword(obj.Password)
+            Password = obj.Password
         };
     }
 
@@ -110,12 +111,16 @@ public class UniqueAccountRepository : BaseContext, IUniqueAccountRepository, ID
         var defaultUser = GenerateDefaultUser();
         var entity = ToEntity(defaultUser);
         var filter = Builders<UniqueAccount>.Filter.Eq(p => p.Id, entity.Id);
-        var result = _uniqueAccountsCollection.FindOneAndReplace(filter, entity);
+        try
+        {
+            var result = CreateUniqueAccountAsync(defaultUser).GetAwaiter().GetResult();
+        }
+        catch { }
     }
-
+    
     private static UniqueAccountAggregate GenerateDefaultUser()
     {
-        var defaultUserId = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e");
+        var defaultUserId = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e").ToString("N");
 
         return new()
         {
@@ -125,7 +130,7 @@ public class UniqueAccountRepository : BaseContext, IUniqueAccountRepository, ID
             IsAdmin = true,
             LastRefreshToken = string.Empty,
             Name = "C. E. de Andrade",
-            Password = BCrypt.Net.BCrypt.HashPassword("123456")
+            Password = "123456"
         };
     }
 

@@ -27,7 +27,7 @@ public class ProductRepository : BaseContext, IProductRepository, IDisposable
         return ToAggregate(await _productsCollection.Find(Builders<Product>.Filter.Empty).ToListAsync());
     }
 
-    public async Task<ProductAggregate> GetProductByIdAsync(Guid id)
+    public async Task<ProductAggregate> GetProductByIdAsync(string id)
     {
         var filter = Builders<Product>.Filter.Eq(p => p.Id, BaseContext.ToDbId(id));
         return ToAggregate(await _productsCollection.Find(filter).FirstOrDefaultAsync());
@@ -41,7 +41,7 @@ public class ProductRepository : BaseContext, IProductRepository, IDisposable
         return result.ModifiedCount >= 1 ? SUCCESS_RETURN : ERROR_RETURN;
     }
 
-    public async Task<bool> DeleteProductAsync(Guid id)
+    public async Task<bool> DeleteProductAsync(string id)
     {
         var filter = Builders<Product>.Filter.Eq(p => p.Id, ToDbId(id));
         var result = await _productsCollection.DeleteOneAsync(filter);
