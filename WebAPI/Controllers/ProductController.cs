@@ -1,10 +1,10 @@
 using Domain.Aggregate;
 using Domain.Command;
-using Domain.Query;
+using Domain.DTO;
 using Domain.Service;
+using Infra.DataFromMongo.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
 
 namespace WebAPI.Controllers;
 
@@ -22,15 +22,19 @@ public class ProductController : ControllerBase
         _productService = productService;
     }
 
-    // GET: api/products
+    // GET: products
     [HttpGet]
     public async Task<IActionResult> GetAllProducts()
     {
         var products = await _productService.GetAllProductsAsync();
-        return Ok(products);
+        if (products == null)
+        {
+            return NotFound();
+        }
+        return Ok(ProductResultDTO.GenerateListFromAggregates(products));
     }
 
-    // GET: api/products/{id}
+    // GET: products/{id}
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProductById([FromRoute] string id)
     {
@@ -40,10 +44,10 @@ public class ProductController : ControllerBase
         {
             return NotFound();
         }
-        return Ok(product);
+        return Ok(new ProductResultDTO(product));
     }
 
-    // POST: api/products
+    // POST: products
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] AddProductCommand product)
     {
@@ -59,7 +63,7 @@ public class ProductController : ControllerBase
         return Ok(new { success = createdProduct });
     }
 
-    // PUT: api/products/{id}
+    // PUT: products/{id}
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProduct([FromRoute] string id, [FromBody] UpdProductCommand product)
     {
@@ -79,7 +83,7 @@ public class ProductController : ControllerBase
         return Ok(new { success = updatedProduct });
     }
 
-    // DELETE: api/products/{id}
+    // DELETE: products/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProduct([FromRoute] string id)
     {
