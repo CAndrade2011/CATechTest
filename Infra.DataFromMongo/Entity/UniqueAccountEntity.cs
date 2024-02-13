@@ -22,8 +22,8 @@ public class UniqueAccount
     public string Email { get; set; }
 
     [BsonElement("password")]
-    [BsonRepresentation(BsonType.String)]
-    public string Password { get; set; }
+    [BsonRepresentation(BsonType.Binary)]
+    public byte[] Password { get; set; }
 
     [BsonElement("lastRefreshToken")]
     [BsonRepresentation(BsonType.String)]

@@ -2,6 +2,8 @@
 using Domain.Repository;
 using Infra.DataFromMongo.Entity;
 using MongoDB.Driver;
+using System.Text;
+using System.Text.Unicode;
 using static MongoDB.Driver.WriteConcern;
 
 namespace Infra.DataFromMongo.Repository;
@@ -34,12 +36,13 @@ public class UniqueAccountRepository : BaseContext, IUniqueAccountRepository, ID
         // Used for login
         if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
         {
+            var bytePassword = Encoding.UTF8.GetBytes(password);
             filters &= Builders<UniqueAccount>.Filter.Eq(u => u.Email, email);
-            //filters &= Builders<UniqueAccount>.Filter.Eq(u => u.Password, BCrypt.Net.BCrypt.HashPassword(password));
-            filters &= Builders<UniqueAccount>.Filter.Eq(u => u.Password, password);
+            filters &= Builders<UniqueAccount>.Filter.Eq(u => u.Password, bytePassword);
         }
 
-        return ToAggregate(await _uniqueAccountsCollection.Find(filters).ToListAsync());
+        var resultList = await _uniqueAccountsCollection.Find(filters).ToListAsync();
+        return ToAggregate(resultList);
     }
 
     public async Task<UniqueAccountAggregate> GetUniqueAccountByIdAsync(string id)
@@ -74,7 +77,7 @@ public class UniqueAccountRepository : BaseContext, IUniqueAccountRepository, ID
             IsAdmin = obj.IsAdmin,
             LastRefreshToken = obj.LastRefreshToken,
             Name = obj.Name,
-            Password = obj.Password
+            Password = Encoding.UTF8.GetBytes(obj.Password)
         };
     }
 
@@ -115,9 +118,12 @@ public class UniqueAccountRepository : BaseContext, IUniqueAccountRepository, ID
         {
             var result = CreateUniqueAccountAsync(defaultUser).GetAwaiter().GetResult();
         }
-        catch { }
+        catch
+        {
+            var result2 = UpdateUniqueAccountAsync(defaultUser).GetAwaiter().GetResult();
+        }
     }
-    
+
     private static UniqueAccountAggregate GenerateDefaultUser()
     {
         var defaultUserId = new Guid("0f8fad5b-d9cb-469f-a165-70867728950e").ToString("N");
