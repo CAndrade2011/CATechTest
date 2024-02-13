@@ -26,7 +26,15 @@ public class ProductController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllProducts()
     {
-        var products = await _productService.GetAllProductsAsync();
+        List<ProductAggregate> products;
+        try
+        {
+            products = await _productService.GetAllProductsAsync();
+        }
+        catch (Exception ex) when (ex is AggregateException)
+        {
+            return UnprocessableEntity(ex);
+        }
         if (products == null)
         {
             return NotFound();
@@ -39,7 +47,15 @@ public class ProductController : ControllerBase
     public async Task<IActionResult> GetProductById([FromRoute] string id)
     {
         if (string.IsNullOrWhiteSpace(id)) return BadRequest();
-        var product = await _productService.GetProductByIdAsync(id);
+        ProductAggregate product;
+        try
+        {
+            product = await _productService.GetProductByIdAsync(id);
+        }
+        catch (Exception ex) when (ex is AggregateException)
+        {
+            return UnprocessableEntity(ex);
+        }
         if (product == null)
         {
             return NotFound();
@@ -52,14 +68,20 @@ public class ProductController : ControllerBase
     public async Task<IActionResult> CreateProduct([FromBody] AddProductCommand product)
     {
         if (product == null) return BadRequest();
-        var createdProduct = await _productService.CreateProductAsync(new ProductAggregate
+        bool createdProduct;
+        try
         {
-            BarCode = product.BarCode,
-            Name = product.Name,
-            Quantity = product.Quantity
-        });
-        // TODO: fix create action to improve RestFulAPI
-        //return CreatedAtAction(nameof(GetProductById), new { success = createdProduct }, createdProduct);
+            createdProduct = await _productService.CreateProductAsync(new ProductAggregate
+            {
+                BarCode = product.BarCode,
+                Name = product.Name,
+                Quantity = product.Quantity
+            });
+        }
+        catch (Exception ex) when (ex is AggregateException)
+        {
+            return UnprocessableEntity(ex);
+        }
         return Ok(new { success = createdProduct });
     }
 
@@ -69,13 +91,21 @@ public class ProductController : ControllerBase
     {
         if (product == null) return BadRequest();
         if (string.IsNullOrWhiteSpace(id)) return BadRequest();
-        var updatedProduct = await _productService.UpdateProductAsync(new ProductAggregate
+        bool updatedProduct;
+        try
         {
-            BarCode = product.BarCode,
-            Name = product.Name,
-            Quantity = product.Quantity,
-            Id = id
-        });
+            updatedProduct = await _productService.UpdateProductAsync(new ProductAggregate
+            {
+                BarCode = product.BarCode,
+                Name = product.Name,
+                Quantity = product.Quantity,
+                Id = id
+            });
+        }
+        catch (Exception ex) when (ex is AggregateException)
+        {
+            return UnprocessableEntity(ex);
+        }
         if (!updatedProduct)
         {
             return NotFound();
@@ -88,7 +118,15 @@ public class ProductController : ControllerBase
     public async Task<IActionResult> DeleteProduct([FromRoute] string id)
     {
         if (string.IsNullOrWhiteSpace(id)) return BadRequest();
-        var isDeleted = await _productService.DeleteProductAsync(id);
+        bool isDeleted;
+        try
+        {
+            isDeleted = await _productService.DeleteProductAsync(id);
+        }
+        catch (Exception ex) when (ex is AggregateException)
+        {
+            return UnprocessableEntity(ex);
+        }
         if (!isDeleted)
         {
             return NotFound();

@@ -26,7 +26,15 @@ public class UniqueAccountController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllUniqueAccounts()
     {
-        var uniqueAccounts = await _uniqueAccountService.GetAllUniqueAccountsAsync();
+        List<UniqueAccountAggregate> uniqueAccounts;
+        try
+        {
+            uniqueAccounts = await _uniqueAccountService.GetAllUniqueAccountsAsync();
+        }
+        catch (Exception ex) when (ex is AggregateException)
+        {
+            return UnprocessableEntity(ex);
+        }
         if (uniqueAccounts == null)
         {
             return NotFound();
@@ -39,7 +47,15 @@ public class UniqueAccountController : ControllerBase
     public async Task<IActionResult> GetUniqueAccountById([FromRoute] string id)
     {
         if (string.IsNullOrWhiteSpace(id)) return BadRequest();
-        var uniqueAccount = await _uniqueAccountService.GetUniqueAccountByIdAsync(id);
+        UniqueAccountAggregate uniqueAccount;
+        try
+        {
+            uniqueAccount = await _uniqueAccountService.GetUniqueAccountByIdAsync(id);
+        }
+        catch (Exception ex) when (ex is AggregateException)
+        {
+            return UnprocessableEntity(ex);
+        }
         if (uniqueAccount == null)
         {
             return NotFound();
@@ -52,15 +68,22 @@ public class UniqueAccountController : ControllerBase
     public async Task<IActionResult> CreateUniqueAccount([FromBody] AddUniqueAccountCommand uniqueAccount)
     {
         if (uniqueAccount == null) return BadRequest();
-        var createdUniqueAccount = await _uniqueAccountService.CreateUniqueAccountAsync(new UniqueAccountAggregate
+        bool createdUniqueAccount;
+        try
         {
-            DisplayName = uniqueAccount.DisplayName,
-            Email = uniqueAccount.Email,
-            IsAdmin = uniqueAccount.IsAdmin,
-            Name = uniqueAccount.Name,
-            Password = uniqueAccount.Password,
-        });
-        //return CreatedAtAction(nameof(GetUniqueAccountById), new { success = createdUniqueAccount }, createdUniqueAccount);
+            createdUniqueAccount = await _uniqueAccountService.CreateUniqueAccountAsync(new UniqueAccountAggregate
+            {
+                DisplayName = uniqueAccount.DisplayName,
+                Email = uniqueAccount.Email,
+                IsAdmin = uniqueAccount.IsAdmin,
+                Name = uniqueAccount.Name,
+                Password = uniqueAccount.Password,
+            });
+        }
+        catch (Exception ex) when (ex is AggregateException)
+        {
+            return UnprocessableEntity(ex);
+        }
         return Ok(new { success = createdUniqueAccount });
     }
 
@@ -70,15 +93,23 @@ public class UniqueAccountController : ControllerBase
     {
         if (uniqueAccount == null) return BadRequest();
         if (string.IsNullOrWhiteSpace(id)) return BadRequest();
-        var updatedUniqueAccount = await _uniqueAccountService.UpdateUniqueAccountAsync(new UniqueAccountAggregate
+        bool updatedUniqueAccount;
+        try
         {
-            Id = id,
-            DisplayName = uniqueAccount.DisplayName,
-            Email = uniqueAccount.Email,
-            IsAdmin = uniqueAccount.IsAdmin,
-            Name = uniqueAccount.Name,
-            Password = uniqueAccount.Password
-        });
+            updatedUniqueAccount = await _uniqueAccountService.UpdateUniqueAccountAsync(new UniqueAccountAggregate
+            {
+                Id = id,
+                DisplayName = uniqueAccount.DisplayName,
+                Email = uniqueAccount.Email,
+                IsAdmin = uniqueAccount.IsAdmin,
+                Name = uniqueAccount.Name,
+                Password = uniqueAccount.Password
+            });
+        }
+        catch (Exception ex) when (ex is AggregateException)
+        {
+            return UnprocessableEntity(ex);
+        }
         if (!updatedUniqueAccount)
         {
             return NotFound();
@@ -91,7 +122,15 @@ public class UniqueAccountController : ControllerBase
     public async Task<IActionResult> DeleteUniqueAccount([FromRoute] string id)
     {
         if (string.IsNullOrWhiteSpace(id)) return BadRequest();
-        var isDeleted = await _uniqueAccountService.DeleteUniqueAccountAsync(id);
+        bool isDeleted;
+        try
+        {
+            isDeleted = await _uniqueAccountService.DeleteUniqueAccountAsync(id);
+        }
+        catch (Exception ex) when (ex is AggregateException)
+        {
+            return UnprocessableEntity(ex);
+        }
         if (!isDeleted)
         {
             return NotFound();
