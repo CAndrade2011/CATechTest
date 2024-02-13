@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
-// TODO: Autorization needs to be fixed
-//[Authorize]
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class UniqueAccountController : ControllerBase

@@ -1,5 +1,8 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Infra.DataFromMongo.Repository;
 
@@ -12,7 +15,6 @@ public class BaseContext : IDisposable
 
     protected BaseContext(Microsoft.Extensions.Configuration.IConfiguration configuration)
     {
-        //var client = new MongoClient(configuration["ConnectionStrings:MongoDB"]);
         var settings = MongoClientSettings.FromConnectionString(configuration["ConnectionStrings:MongoDB"]);
         settings.Credential = MongoCredential.CreateCredential("admin", "root", "SenhaAdmin2024!");
         var client = new MongoClient(settings);

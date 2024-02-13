@@ -8,8 +8,7 @@ using System.Runtime.CompilerServices;
 
 namespace WebAPI.Controllers;
 
-// TODO: Autorization needs to be fixed
-//[Authorize]
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class ProductController : ControllerBase
