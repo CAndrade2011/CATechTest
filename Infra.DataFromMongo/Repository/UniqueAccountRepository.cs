@@ -13,6 +13,11 @@ public class UniqueAccountRepository : BaseContext, IUniqueAccountRepository, ID
     private readonly IMongoCollection<UniqueAccount> _uniqueAccountsCollection;
     private const string COLLECTION_NAME = "unique-account";
 
+    public UniqueAccountRepository(IMongoCollection<UniqueAccount> uniqueAccountsCollection) : base()
+    {
+        _uniqueAccountsCollection = uniqueAccountsCollection;
+    }
+
     public UniqueAccountRepository(Microsoft.Extensions.Configuration.IConfiguration configuration) : base(configuration)
     {
         _uniqueAccountsCollection = base.GetCollection<UniqueAccount>(COLLECTION_NAME);

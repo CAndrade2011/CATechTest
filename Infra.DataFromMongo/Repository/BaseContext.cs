@@ -13,6 +13,8 @@ public class BaseContext : IDisposable
     protected const bool SUCCESS_RETURN = true;
     protected const bool ERROR_RETURN = false;
 
+    public BaseContext(){}
+
     protected BaseContext(Microsoft.Extensions.Configuration.IConfiguration configuration)
     {
         var settings = MongoClientSettings.FromConnectionString(configuration["ConnectionStrings:MongoDB"]);

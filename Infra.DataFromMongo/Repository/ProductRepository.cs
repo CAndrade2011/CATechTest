@@ -10,6 +10,11 @@ public class ProductRepository : BaseContext, IProductRepository, IDisposable
     private readonly IMongoCollection<Product> _productsCollection;
     private const string COLLECTION_NAME = "product";
 
+    public ProductRepository(IMongoCollection<Product> productsCollection) : base()
+    {
+        _productsCollection = productsCollection;
+    }
+
     public ProductRepository(Microsoft.Extensions.Configuration.IConfiguration configuration) : base(configuration)
     {
         _productsCollection = base.GetCollection<Product>(COLLECTION_NAME);
