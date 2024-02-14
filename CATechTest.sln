@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserStory", "UserStory", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI.Test", "WebAPI.Test\WebAPI.Test.csproj", "{011B01EF-8117-470D-AB97-CCD2778630A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infra.DataFromMongo.Test", "Infra.DataFromMongo.Test\Infra.DataFromMongo.Test.csproj", "{EC2738F1-6B4D-49E3-81E0-C44B8F75D700}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{011B01EF-8117-470D-AB97-CCD2778630A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{011B01EF-8117-470D-AB97-CCD2778630A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{011B01EF-8117-470D-AB97-CCD2778630A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC2738F1-6B4D-49E3-81E0-C44B8F75D700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC2738F1-6B4D-49E3-81E0-C44B8F75D700}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC2738F1-6B4D-49E3-81E0-C44B8F75D700}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC2738F1-6B4D-49E3-81E0-C44B8F75D700}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
